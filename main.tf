@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 locals {
-  workload = "tailgate"
+  workload = "tailscale"
 }
 
 module "kms" {
@@ -35,4 +35,14 @@ module "database" {
   availability_zones = module.vpc.availability_zones
 
   instance_class = var.rds_instance_class
+}
+
+module "tailscale" {
+  source        = "./modules/tailscale"
+  workload      = local.workload
+  vpc_id        = module.vpc.vpc_id
+  subnet        = module.vpc.subnet_public1_id
+  instance_type = var.instance_type
+  ami           = var.ami
+  userdata      = var.userdata
 }

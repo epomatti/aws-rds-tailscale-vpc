@@ -8,6 +8,14 @@ variable "rds_instance_class" {
   default = "db.t4g.small"
 }
 
-variable "athena_user_principal" {
+variable "instance_type" {
+  type = string
+}
+
+variable "userdata" {
+  type = string
+}
+
+variable "ami" {
   type = string
 }
