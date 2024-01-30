@@ -34,7 +34,8 @@ resource "aws_instance" "nat_instance" {
   lifecycle {
     ignore_changes = [
       ami,
-      associate_public_ip_address
+      associate_public_ip_address,
+      user_data
     ]
   }
 
@@ -101,6 +102,16 @@ resource "aws_security_group_rule" "ingress_https" {
   to_port           = 443
   protocol          = "TCP"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  security_group_id = aws_security_group.nat_instance.id
+}
+
+resource "aws_security_group_rule" "tailscale_udp_ingress" {
+  type              = "ingress"
+  from_port         = 41641
+  to_port           = 41641
+  protocol          = "UDP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.nat_instance.id
 }
 
