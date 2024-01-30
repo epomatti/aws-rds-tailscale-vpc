@@ -13,7 +13,7 @@ resource "aws_db_instance" "default" {
   password   = var.password
   kms_key_id = var.kms_key_arn
 
-  iam_database_authentication_enabled = true
+  iam_database_authentication_enabled = false
 
   # Network
   db_subnet_group_name = aws_db_subnet_group.default.name
@@ -27,7 +27,7 @@ resource "aws_db_instance" "default" {
   storage_type          = "gp3"
 
   # Valid until 2061 with automatic rotation
-  ca_cert_identifier = "rds-ca-rsa4096-g1"
+  # ca_cert_identifier = "rds-ca-rsa4096-g1"
 
   # Security
   storage_encrypted      = true

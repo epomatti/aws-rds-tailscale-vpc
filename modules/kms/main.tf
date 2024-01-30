@@ -8,16 +8,16 @@ locals {
 }
 
 resource "aws_kms_key" "default" {
-  description             = "RDS PostgreSQL CMK for Athena"
+  description             = "RDS PostgreSQL CMK with Tailscale"
   key_usage               = "ENCRYPT_DECRYPT"
   is_enabled              = true
-  deletion_window_in_days = 30
+  deletion_window_in_days = 7
   enable_key_rotation     = true
   multi_region            = false
 }
 
 resource "aws_kms_alias" "default" {
-  name          = "alias/rds-postgresql-for-athena"
+  name          = "alias/rds-postgresql-tailscale"
   target_key_id = aws_kms_key.default.key_id
 }
 
