@@ -1,7 +1,5 @@
 locals {
-  username = "athena"
-  password = "p4ssw0rd"
-  db_name  = "${var.workload}db"
+  db_name = "${var.workload}db"
 }
 
 resource "aws_db_instance" "default" {
@@ -11,8 +9,8 @@ resource "aws_db_instance" "default" {
   engine         = "postgres"
   engine_version = "16.1"
 
-  username   = local.username
-  password   = local.password
+  username   = var.username
+  password   = var.password
   kms_key_id = var.kms_key_arn
 
   iam_database_authentication_enabled = true

@@ -30,6 +30,9 @@ module "database" {
   workload    = local.workload
   kms_key_arn = module.kms.kms_key_arn
 
+  username = var.rds_username
+  password = var.rds_password
+
   vpc_id             = module.vpc.vpc_id
   subnets            = module.vpc.private_subnets
   availability_zones = module.vpc.availability_zones

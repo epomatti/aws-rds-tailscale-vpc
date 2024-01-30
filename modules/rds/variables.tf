@@ -21,3 +21,12 @@ variable "subnets" {
 variable "availability_zones" {
   type = list(string)
 }
+
+variable "username" {
+  type = string
+}
+
+variable "password" {
+  type      = string
+  sensitive = true
+}

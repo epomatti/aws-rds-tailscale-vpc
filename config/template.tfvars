@@ -1,4 +1,12 @@
-# NAT instance
+# Project
+aws_region = "us-east-2"
+
+# Tailscale Subnet Router
+ami           = "ami-0c758b376a9cf7862"
 instance_type = "t4g.nano"
 userdata      = "debian.sh"
-ami           = "ami-0c758b376a9cf7862"
+
+# RDS
+rds_instance_class = "db.t4g.micro"
+rds_username       = "tailscale"
+rds_password       = "p4ssw0rd"

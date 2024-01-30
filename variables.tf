@@ -1,13 +1,8 @@
 variable "aws_region" {
-  type    = string
-  default = "us-east-2"
+  type = string
 }
 
-variable "rds_instance_class" {
-  type    = string
-  default = "db.t4g.small"
-}
-
+### Tailgate ###
 variable "instance_type" {
   type = string
 }
@@ -18,4 +13,18 @@ variable "userdata" {
 
 variable "ami" {
   type = string
+}
+
+### RDS ###
+variable "rds_instance_class" {
+  type = string
+}
+
+variable "rds_username" {
+  type = string
+}
+
+variable "rds_password" {
+  type      = string
+  sensitive = true
 }
