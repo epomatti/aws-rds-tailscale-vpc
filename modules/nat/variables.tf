@@ -21,3 +21,7 @@ variable "instance_type" {
 variable "userdata" {
   type = string
 }
+
+variable "tailscale_route_table_id" {
+  type = string
+}

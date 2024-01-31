@@ -1,3 +1,10 @@
+resource "aws_route" "nat" {
+  route_table_id         = var.tailscale_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = aws_instance.nat_instance.primary_network_interface_id
+}
+
+### NAT Instance ###
 resource "aws_iam_instance_profile" "nat_instance" {
   name = "${var.workload}-nat"
   role = aws_iam_role.nat_instance.id
