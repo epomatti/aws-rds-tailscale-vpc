@@ -14,8 +14,8 @@ output "nat_subnet_id" {
   value = aws_subnet.nat.id
 }
 
-output "nat_route_table_id" {
-  value = aws_route_table.nat.id
+output "tailscale_route_table_id" {
+  value = aws_route_table.ts.id
 }
 
 output "tailscale_subnet_id" {

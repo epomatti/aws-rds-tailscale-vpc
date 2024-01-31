@@ -44,13 +44,6 @@ resource "aws_instance" "default" {
   }
 }
 
-### Route to NAT Instance ###
-resource "aws_route" "nat" {
-  route_table_id         = var.nat_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
-  network_interface_id   = var.nat_network_interface_id
-}
-
 ### IAM Role ###
 resource "aws_iam_role" "default" {
   name = "${var.workload}-subnet-router"

@@ -49,16 +49,19 @@ module "nat" {
   userdata      = var.nat_userdata
 }
 
-module "tailscale" {
-  source        = "./modules/tailscale"
-  workload      = local.workload
-  vpc_id        = module.vpc.vpc_id
-  subnet        = module.vpc.tailscale_subnet_id
-  instance_type = var.ts_instance_type
-  ami           = var.ts_ami
-  userdata      = var.ts_userdata
+resource "aws_route" "nat" {
+  route_table_id         = module.vpc.tailscale_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = module.nat.network_interface_id
+}
 
-  nat_route_table_id       = module.vpc.nat_route_table_id
-  nat_network_interface_id = module.nat.network_interface_id
-  rds_security_group_id    = module.database.security_group_id
+module "tailscale" {
+  source                = "./modules/tailscale"
+  workload              = local.workload
+  vpc_id                = module.vpc.vpc_id
+  subnet                = module.vpc.tailscale_subnet_id
+  instance_type         = var.ts_instance_type
+  ami                   = var.ts_ami
+  userdata              = var.ts_userdata
+  rds_security_group_id = module.database.security_group_id
 }

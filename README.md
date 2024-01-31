@@ -18,3 +18,7 @@ cp config/template.tfvars .auto.tfvars
 ```sh
 sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24 --accept-dns=false
 ```
+
+us-west-2.rds.amazonaws.com
+10.0.100.2
+10.0.101.2
