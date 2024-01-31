@@ -21,11 +21,3 @@ variable "instance_type" {
 variable "userdata" {
   type = string
 }
-
-variable "nat_network_interface_id" {
-  type = string
-}
-
-variable "nat_route_table_id" {
-  type = string
-}

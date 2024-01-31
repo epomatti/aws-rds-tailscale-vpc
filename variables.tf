@@ -2,16 +2,33 @@ variable "aws_region" {
   type = string
 }
 
+### NAT ###
+variable "nat_instance_type" {
+  type = string
+}
+
+variable "nat_userdata" {
+  type = string
+}
+
+variable "nat_ami" {
+  type = string
+}
+
 ### Tailgate ###
-variable "instance_type" {
+variable "create_ts_subnet_router" {
+  type = bool
+}
+
+variable "ts_instance_type" {
   type = string
 }
 
-variable "userdata" {
+variable "ts_userdata" {
   type = string
 }
 
-variable "ami" {
+variable "ts_ami" {
   type = string
 }
 

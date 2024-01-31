@@ -16,4 +16,7 @@ apt install -y iptables-persistent
 iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
 iptables-save  > /etc/iptables/rules.v4
 
-sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.0.0/24 --accept-dns=false
+sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.90.0/24,10.0.0.0/24 --accept-dns=false
+
+
+reboot

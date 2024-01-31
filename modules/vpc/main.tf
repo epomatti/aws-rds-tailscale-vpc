@@ -16,6 +16,79 @@ resource "aws_vpc" "main" {
   }
 }
 
+### Private Subnet ###
+resource "aws_route_table" "rds1" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "rt-${var.workload}-rds1"
+  }
+}
+
+resource "aws_route_table" "rds2" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "rt-${var.workload}-rds2"
+  }
+}
+
+resource "aws_subnet" "rds1" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.100.0/24"
+  availability_zone       = local.az1
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "subnet-${var.workload}-rds1"
+  }
+}
+
+resource "aws_subnet" "rds2" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.101.0/24"
+  availability_zone       = local.az2
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "subnet-${var.workload}-rds2"
+  }
+}
+
+resource "aws_route_table_association" "rds1" {
+  subnet_id      = aws_subnet.rds1.id
+  route_table_id = aws_route_table.rds1.id
+}
+
+resource "aws_route_table_association" "rds2" {
+  subnet_id      = aws_subnet.rds2.id
+  route_table_id = aws_route_table.rds2.id
+}
+
+
+### Tailscale Subnet Router ###
+resource "aws_route_table" "ts" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "rt-${var.workload}-ts"
+  }
+}
+
+resource "aws_subnet" "ts" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.55.0/24"
+  availability_zone       = local.az1
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "subnet-${var.workload}-ts"
+  }
+}
+
+resource "aws_route_table_association" "ts" {
+  subnet_id      = aws_subnet.ts.id
+  route_table_id = aws_route_table.ts.id
+}
+
+
 ### Internet Gateway ###
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -25,55 +98,8 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-### Private Subnet ###
-resource "aws_route_table" "private1" {
-  vpc_id = aws_vpc.main.id
-  tags = {
-    Name = "rt-${var.workload}-priv1"
-  }
-}
-
-resource "aws_route_table" "private2" {
-  vpc_id = aws_vpc.main.id
-  tags = {
-    Name = "rt-${var.workload}-priv2"
-  }
-}
-
-resource "aws_subnet" "private1" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.100.0/24"
-  availability_zone       = local.az1
-  map_public_ip_on_launch = false
-
-  tags = {
-    Name = "subnet-${var.workload}-priv1"
-  }
-}
-
-resource "aws_subnet" "private2" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.101.0/24"
-  availability_zone       = local.az2
-  map_public_ip_on_launch = false
-
-  tags = {
-    Name = "subnet-${var.workload}-priv2"
-  }
-}
-
-resource "aws_route_table_association" "private1" {
-  subnet_id      = aws_subnet.private1.id
-  route_table_id = aws_route_table.private1.id
-}
-
-resource "aws_route_table_association" "private2" {
-  subnet_id      = aws_subnet.private2.id
-  route_table_id = aws_route_table.private2.id
-}
-
 ### Public Subnet ###
-resource "aws_route_table" "public" {
+resource "aws_route_table" "nat" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -82,22 +108,22 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "rt-${var.workload}-public"
+    Name = "rt-${var.workload}-nat"
   }
 }
 
-resource "aws_subnet" "public1" {
+resource "aws_subnet" "nat" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.0.0/24"
   availability_zone       = local.az1
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "subnet-${var.workload}-pub1"
+    Name = "subnet-${var.workload}-nat"
   }
 }
 
-resource "aws_route_table_association" "public1" {
-  subnet_id      = aws_subnet.public1.id
-  route_table_id = aws_route_table.public.id
+resource "aws_route_table_association" "nat" {
+  subnet_id      = aws_subnet.nat.id
+  route_table_id = aws_route_table.nat.id
 }

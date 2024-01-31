@@ -1,20 +1,20 @@
-resource "aws_iam_instance_profile" "nat_instance" {
-  name = "${var.workload}-nat"
-  role = aws_iam_role.nat_instance.id
+resource "aws_iam_instance_profile" "default" {
+  name = "${var.workload}-subnet-router"
+  role = aws_iam_role.default.id
 }
 
-resource "aws_instance" "nat_instance" {
+resource "aws_instance" "default" {
   ami           = var.ami
   instance_type = var.instance_type
 
   associate_public_ip_address = true
   subnet_id                   = var.subnet
-  vpc_security_group_ids      = [aws_security_group.nat_instance.id]
+  vpc_security_group_ids      = [aws_security_group.default.id]
 
-  iam_instance_profile = aws_iam_instance_profile.nat_instance.id
+  iam_instance_profile = aws_iam_instance_profile.default.id
   user_data            = file("${path.module}/userdata/${var.userdata}")
 
-  # Requirement for NAT
+  # Requirement for Tailscale
   # TODO: Confirm for Tailscale
   source_dest_check = false
 
@@ -44,10 +44,16 @@ resource "aws_instance" "nat_instance" {
   }
 }
 
-### IAM Role ###
+### Route to NAT Instance ###
+resource "aws_route" "nat" {
+  route_table_id         = var.nat_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = var.nat_network_interface_id
+}
 
-resource "aws_iam_role" "nat_instance" {
-  name = "nat-${var.workload}"
+### IAM Role ###
+resource "aws_iam_role" "default" {
+  name = "${var.workload}-subnet-router"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -64,22 +70,18 @@ resource "aws_iam_role" "nat_instance" {
   })
 }
 
-data "aws_iam_policy" "AmazonSSMManagedInstanceCore" {
-  arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+resource "aws_iam_role_policy_attachment" "AmazonSSMManagedInstanceCore" {
+  role       = aws_iam_role.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
-resource "aws_iam_role_policy_attachment" "ssm-managed-instance-core" {
-  role       = aws_iam_role.nat_instance.name
-  policy_arn = data.aws_iam_policy.AmazonSSMManagedInstanceCore.arn
-}
-
-resource "aws_security_group" "nat_instance" {
-  name        = "ec2-ssm-${var.workload}-nat"
+resource "aws_security_group" "default" {
+  name        = "ec2-ssm-${var.workload}-subnet-router"
   description = "Controls access for EC2 via Session Manager"
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "sg-ssm-${var.workload}-nat"
+    Name = "sg-ssm-${var.workload}-subnet-router"
   }
 }
 
@@ -93,7 +95,7 @@ resource "aws_security_group_rule" "ingress_http" {
   to_port           = 80
   protocol          = "TCP"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
-  security_group_id = aws_security_group.nat_instance.id
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "ingress_https" {
@@ -102,7 +104,7 @@ resource "aws_security_group_rule" "ingress_https" {
   to_port           = 443
   protocol          = "TCP"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
-  security_group_id = aws_security_group.nat_instance.id
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "tailscale_udp_ingress" {
@@ -112,7 +114,7 @@ resource "aws_security_group_rule" "tailscale_udp_ingress" {
   protocol          = "UDP"
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = aws_security_group.nat_instance.id
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "egress_http" {
@@ -121,7 +123,7 @@ resource "aws_security_group_rule" "egress_http" {
   to_port           = 80
   protocol          = "TCP"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nat_instance.id
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "egress_https" {
@@ -130,7 +132,7 @@ resource "aws_security_group_rule" "egress_https" {
   to_port           = 443
   protocol          = "TCP"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nat_instance.id
+  security_group_id = aws_security_group.default.id
 }
 
 resource "aws_security_group_rule" "egress_all" {
@@ -139,5 +141,5 @@ resource "aws_security_group_rule" "egress_all" {
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
-  security_group_id = aws_security_group.nat_instance.id
+  security_group_id = aws_security_group.default.id
 }

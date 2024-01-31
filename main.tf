@@ -42,12 +42,25 @@ module "database" {
   instance_class = var.rds_instance_class
 }
 
+module "nat" {
+  source        = "./modules/nat"
+  workload      = local.workload
+  vpc_id        = module.vpc.vpc_id
+  subnet        = module.vpc.subnet_public1_id
+  instance_type = var.nat_instance_type
+  ami           = var.nat_ami
+  userdata      = var.nat_userdata
+}
+
 module "tailscale" {
   source        = "./modules/tailscale"
   workload      = local.workload
   vpc_id        = module.vpc.vpc_id
   subnet        = module.vpc.subnet_public1_id
-  instance_type = var.instance_type
-  ami           = var.ami
-  userdata      = var.userdata
+  instance_type = var.ts_instance_type
+  ami           = var.ts_ami
+  userdata      = var.ts_userdata
+
+  nat_route_table_id       = module.vpc.nat_route_table_id
+  nat_network_interface_id = module.nat.network_interface_id
 }

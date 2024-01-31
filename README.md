@@ -1,5 +1,8 @@
 # Tailscale connection AWS RDS
 
+
+<img src=".assets/tailscale.png" />
+
 https://tailscale.com/kb/1141/aws-rds
 
 https://tailscale.com/kb/1174/install-debian-bookworm
