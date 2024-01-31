@@ -32,6 +32,19 @@ variable "ts_ami" {
   type = string
 }
 
+### App server ###
+variable "create_appserver" {
+  type = bool
+}
+
+variable "appserver_ami" {
+  type = string
+}
+
+variable "appserver_instance_type" {
+  type = string
+}
+
 ### RDS ###
 variable "rds_instance_class" {
   type = string
