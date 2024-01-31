@@ -26,7 +26,7 @@ sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
 # firewall-cmd --permanent --add-masquerade
 
 
-sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.1.0/24 --accept-dns=false
+sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.0.0/24 --accept-dns=false
 #  --accept-dns=false
 
 

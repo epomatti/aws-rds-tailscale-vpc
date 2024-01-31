@@ -37,6 +37,8 @@ module "database" {
   subnets            = module.vpc.private_subnets
   availability_zones = module.vpc.availability_zones
 
+  tailgate_subnet_router_source_security_group_id = module.tailscale.security_group_id
+
   instance_class = var.rds_instance_class
 }
 
