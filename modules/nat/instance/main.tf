@@ -1,5 +1,5 @@
-resource "aws_route" "nat" {
-  route_table_id         = var.tailscale_route_table_id
+resource "aws_route" "appserver_to_nat" {
+  route_table_id         = var.appserver_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   network_interface_id   = aws_instance.nat_instance.primary_network_interface_id
 }

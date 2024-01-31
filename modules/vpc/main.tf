@@ -58,11 +58,29 @@ resource "aws_route_table_association" "rds1" {
   route_table_id = aws_route_table.rds1.id
 }
 
-resource "aws_route_table_association" "rds2" {
-  subnet_id      = aws_subnet.rds2.id
-  route_table_id = aws_route_table.rds2.id
+### Application Server ###
+resource "aws_subnet" "app" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.90.0/24"
+  availability_zone       = local.az1
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name = "subnet-${var.workload}-app"
+  }
 }
 
+resource "aws_route_table" "app" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "rt-${var.workload}-app"
+  }
+}
+
+resource "aws_route_table_association" "app" {
+  subnet_id      = aws_subnet.app.id
+  route_table_id = aws_route_table.app.id
+}
 
 ### Tailscale Subnet Router ###
 resource "aws_route_table" "ts" {

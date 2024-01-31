@@ -22,6 +22,6 @@ variable "userdata" {
   type = string
 }
 
-variable "tailscale_route_table_id" {
+variable "appserver_route_table_id" {
   type = string
 }
