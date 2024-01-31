@@ -16,18 +16,18 @@ cp config/template.tfvars .auto.tfvars
 
 
 ```sh
-sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.55.0/24 --accept-dns=false
+sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.55.0/24,10.0.0.0/24 --accept-dns=false
 sudo tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24 --accept-dns=false
 ```
 
 Approve the subnet routes
 
-| Column 1 | Column 2 |
-|----------|----------|
-|   Row 1  |   Row 1  |
-|   Row 2  |   Row 2  |
+| IP         | Namespace                   |
+|------------|-----------------------------|
+| 10.0.100.2 | us-east-2.rds.amazonaws.com |
+| 10.0.100.2 | us-east-2.rds.amazonaws.com |
 
 
-us-east-2.rds.amazonaws.com
-10.0.100.2
-10.0.101.2
+```
+tailscale ip -4
+```

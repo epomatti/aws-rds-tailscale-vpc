@@ -39,8 +39,8 @@ module "database" {
   availability_zones = module.vpc.availability_zones
 }
 
-# module "nat" {
-#   source                   = "./modules/nat"
+# module "nat_instance" {
+#   source                   = "./modules/nat-instance"
 #   workload                 = local.workload
 #   vpc_id                   = module.vpc.vpc_id
 #   subnet                   = module.vpc.nat_subnet_id

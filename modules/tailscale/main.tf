@@ -15,7 +15,6 @@ resource "aws_instance" "default" {
   user_data            = file("${path.module}/userdata/${var.userdata}")
 
   # Requirement for Tailscale
-  # TODO: Confirm for Tailscale
   source_dest_check = false
 
   metadata_options {
