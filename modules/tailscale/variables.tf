@@ -29,3 +29,7 @@ variable "nat_network_interface_id" {
 variable "nat_route_table_id" {
   type = string
 }
+
+variable "rds_security_group_id" {
+  type = string
+}

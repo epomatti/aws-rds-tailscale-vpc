@@ -26,9 +26,10 @@ module "vpc" {
 }
 
 module "database" {
-  source      = "./modules/rds"
-  workload    = local.workload
-  kms_key_arn = module.kms.kms_key_arn
+  source         = "./modules/rds"
+  workload       = local.workload
+  instance_class = var.rds_instance_class
+  kms_key_arn    = module.kms.kms_key_arn
 
   username = var.rds_username
   password = var.rds_password
@@ -36,10 +37,6 @@ module "database" {
   vpc_id             = module.vpc.vpc_id
   subnets            = module.vpc.rds_subnets
   availability_zones = module.vpc.availability_zones
-
-  tailgate_subnet_router_source_security_group_id = module.tailscale.security_group_id
-
-  instance_class = var.rds_instance_class
 }
 
 module "nat" {
@@ -63,4 +60,5 @@ module "tailscale" {
 
   nat_route_table_id       = module.vpc.nat_route_table_id
   nat_network_interface_id = module.nat.network_interface_id
+  rds_security_group_id    = module.database.security_group_id
 }

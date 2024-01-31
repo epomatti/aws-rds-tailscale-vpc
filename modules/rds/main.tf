@@ -83,13 +83,3 @@ resource "aws_security_group_rule" "ingress" {
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
   security_group_id = aws_security_group.allow_postgresql.id
 }
-
-resource "aws_security_group_rule" "tailscale_subnet_router" {
-  description              = "Allows connection from the Tailscale subnet router"
-  type                     = "ingress"
-  from_port                = 5432
-  to_port                  = 5432
-  protocol                 = "tcp"
-  source_security_group_id = var.tailgate_subnet_router_source_security_group_id
-  security_group_id        = aws_security_group.allow_postgresql.id
-}

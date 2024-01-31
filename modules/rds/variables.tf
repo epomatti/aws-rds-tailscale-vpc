@@ -30,7 +30,3 @@ variable "password" {
   type      = string
   sensitive = true
 }
-
-variable "tailgate_subnet_router_source_security_group_id" {
-  type = string
-}

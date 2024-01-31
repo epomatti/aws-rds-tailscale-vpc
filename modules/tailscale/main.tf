@@ -154,3 +154,15 @@ resource "aws_security_group_rule" "tailscale_stun_egress" {
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.default.id
 }
+
+### RDS Permission ###
+# This will add direct permissions to the RDS instance from the Tailgate sbunet router
+resource "aws_security_group_rule" "tailscale_subnet_router" {
+  description              = "Allows connection from the Tailscale subnet router"
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.default.id
+  security_group_id        = var.rds_security_group_id
+}
