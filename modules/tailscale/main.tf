@@ -107,16 +107,6 @@ resource "aws_security_group_rule" "ingress_https" {
   security_group_id = aws_security_group.default.id
 }
 
-resource "aws_security_group_rule" "tailscale_udp_ingress" {
-  type              = "ingress"
-  from_port         = 41641
-  to_port           = 41641
-  protocol          = "UDP"
-  cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = aws_security_group.default.id
-}
-
 resource "aws_security_group_rule" "egress_http" {
   type              = "egress"
   from_port         = 80
@@ -135,11 +125,32 @@ resource "aws_security_group_rule" "egress_https" {
   security_group_id = aws_security_group.default.id
 }
 
-resource "aws_security_group_rule" "egress_all" {
+resource "aws_security_group_rule" "postgresql_egress" {
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "TCP"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  security_group_id = aws_security_group.default.id
+}
+
+# https://tailscale.com/kb/1082/firewall-ports
+resource "aws_security_group_rule" "tailscale_direct_wireguard_egress" {
+  type              = "egress"
+  from_port         = 41641
+  to_port           = 41641
+  protocol          = "UDP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.default.id
+}
+
+resource "aws_security_group_rule" "tailscale_stun_egress" {
+  type              = "egress"
+  from_port         = 3478
+  to_port           = 3478
+  protocol          = "UDP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.default.id
 }

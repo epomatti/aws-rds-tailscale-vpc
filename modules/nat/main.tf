@@ -120,3 +120,24 @@ resource "aws_security_group_rule" "egress_https" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.nat_instance.id
 }
+
+# https://tailscale.com/kb/1082/firewall-ports
+resource "aws_security_group_rule" "tailscale_direct_wireguard_egress" {
+  type              = "egress"
+  from_port         = 41641
+  to_port           = 41641
+  protocol          = "UDP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.nat_instance.id
+}
+
+resource "aws_security_group_rule" "tailscale_stun_egress" {
+  type              = "egress"
+  from_port         = 3478
+  to_port           = 3478
+  protocol          = "UDP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.nat_instance.id
+}
