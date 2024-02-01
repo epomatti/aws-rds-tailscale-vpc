@@ -6,6 +6,17 @@ export NEEDRESTART_MODE=a
 apt update
 apt upgrade -y
 
+apt install telnet dnsutils -y
+
+region=us-east-2
+
+### AWS SSM
+mkdir /tmp/ssm
+cd /tmp/ssm
+wget https://s3.$region.amazonaws.com/amazon-ssm-$region/latest/debian_arm64/amazon-ssm-agent.deb
+dpkg -i amazon-ssm-agent.deb
+systemctl status amazon-ssm-agent
+
 ### Tailscale
 curl -fsSL https://tailscale.com/install.sh | sh
 systemctl enable --now tailscaled
@@ -18,15 +29,4 @@ apt install -y iptables-persistent
 iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
 iptables-save  > /etc/iptables/rules.v4
 
-# https://tailscale.com/kb/1320/performance-best-practices#ethtool-configuration
-NETDEV=$(ip route show 0/0 | cut -f5 -d' ')
-ethtool -K $NETDEV rx-udp-gro-forwarding on rx-gro-list off
-
-printf '#!/bin/sh\n\nethtool -K %s rx-udp-gro-forwarding on rx-gro-list off \n' "$(ip route show 0/0 | cut -f5 -d" ")" | tee /etc/networkd-dispatcher/routable.d/50-tailscale
-chmod 755 /etc/networkd-dispatcher/routable.d/50-tailscale
-
-/etc/networkd-dispatcher/routable.d/50-tailscale
-test $? -eq 0 || echo 'An error occurred.'
-
-
-reboot
+# reboot

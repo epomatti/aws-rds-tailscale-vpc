@@ -1,17 +1,12 @@
+resource "aws_route" "appserver_nat" {
+  route_table_id         = var.appserver_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = aws_instance.default.primary_network_interface_id
+}
+
 resource "aws_iam_instance_profile" "default" {
   name = "${var.workload}-subnet-router"
   role = aws_iam_role.default.id
-}
-
-resource "aws_eip" "default" {
-  instance = aws_instance.default.id
-  domain   = "vpc"
-
-  associate_with_private_ip = aws_instance.default.private_ip
-
-  tags = {
-    Name = "nat-${var.workload}"
-  }
 }
 
 resource "aws_instance" "default" {
@@ -134,6 +129,25 @@ resource "aws_security_group_rule" "postgresql_egress" {
   to_port           = 5432
   protocol          = "TCP"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
+  security_group_id = aws_security_group.default.id
+}
+
+
+resource "aws_security_group_rule" "alle" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.default.id
+}
+
+resource "aws_security_group_rule" "alli" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.default.id
 }
 

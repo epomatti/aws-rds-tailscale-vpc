@@ -81,18 +81,18 @@ data "aws_vpc" "selected" {
 
 resource "aws_security_group_rule" "egress_http" {
   type              = "egress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "TCP"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.nat_instance.id
 }
 
-resource "aws_security_group_rule" "egress_https" {
-  type              = "egress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "TCP"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nat_instance.id
-}
+# resource "aws_security_group_rule" "egress_https" {
+#   type              = "egress"
+#   from_port         = 0
+#   to_port           = 443
+#   protocol          = "TCP"
+#   cidr_blocks       = ["0.0.0.0/0"]
+#   security_group_id = aws_security_group.nat_instance.id
+# }

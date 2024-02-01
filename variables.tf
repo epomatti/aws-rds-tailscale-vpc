@@ -3,6 +3,10 @@ variable "aws_region" {
 }
 
 ### NAT ###
+variable "create_nat_instance" {
+  type = bool
+}
+
 variable "nat_instance_type" {
   type = string
 }

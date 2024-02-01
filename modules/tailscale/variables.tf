@@ -25,3 +25,7 @@ variable "userdata" {
 variable "rds_security_group_id" {
   type = string
 }
+
+variable "appserver_route_table_id" {
+  type = string
+}
