@@ -28,21 +28,18 @@ aws ssm start-session --target <instance>
 
 
 ```sh
-tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24 --accept-dns=false
-
-# tailscale up --advertise-routes=10.0.100.0/24,10.0.101.0/24,10.0.55.0/24 --accept-dns=false
+tailscale up --advertise-routes=10.0.0.0/16 --accept-dns=false
 ```
 
 ```ps1
-nslookup <rds> 10.0.55.2
+nslookup <rds> 10.0.0.2
 ```
 
 Approve the subnet routes
 
-| IP         | Namespace                   |
-|------------|-----------------------------|
-| 10.0.100.2 | us-east-2.rds.amazonaws.com |
-| 10.0.101.2 | us-east-2.rds.amazonaws.com |
+| IP       | Namespace                   |
+|----------|-----------------------------|
+| 10.0.0.2 | us-east-2.rds.amazonaws.com |
 
 
 ```
