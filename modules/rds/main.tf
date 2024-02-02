@@ -26,9 +26,6 @@ resource "aws_db_instance" "default" {
   max_allocated_storage = 30
   storage_type          = "gp3"
 
-  # Valid until 2061 with automatic rotation
-  # ca_cert_identifier = "rds-ca-rsa4096-g1"
-
   # Security
   storage_encrypted      = true
   vpc_security_group_ids = [aws_security_group.allow_postgresql.id]
@@ -77,19 +74,9 @@ resource "aws_security_group" "allow_postgresql" {
 resource "aws_security_group_rule" "ingress" {
   description       = "Allows private connection to the database"
   type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
   cidr_blocks       = [data.aws_vpc.selected.cidr_block]
-  security_group_id = aws_security_group.allow_postgresql.id
-}
-
-resource "aws_security_group_rule" "ingress_all" {
-  description       = "Allows private connection to the database"
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.allow_postgresql.id
 }

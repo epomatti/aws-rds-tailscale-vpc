@@ -144,25 +144,6 @@ resource "aws_security_group_rule" "postgresql_egress" {
   security_group_id = aws_security_group.default.id
 }
 
-
-resource "aws_security_group_rule" "alle" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.default.id
-}
-
-resource "aws_security_group_rule" "alli" {
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.default.id
-}
-
 # https://tailscale.com/kb/1082/firewall-ports
 resource "aws_security_group_rule" "tailscale_direct_wireguard_egress" {
   type              = "egress"
@@ -182,16 +163,4 @@ resource "aws_security_group_rule" "tailscale_stun_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.default.id
-}
-
-### RDS Permission ###
-# This will add direct permissions to the RDS instance from the Tailgate sbunet router
-resource "aws_security_group_rule" "tailscale_subnet_router" {
-  description              = "Allows connection from the Tailscale subnet router"
-  type                     = "ingress"
-  from_port                = 0
-  to_port                  = 0
-  protocol                 = "-1"
-  source_security_group_id = aws_security_group.default.id
-  security_group_id        = var.rds_security_group_id
 }
