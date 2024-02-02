@@ -1,6 +1,10 @@
 # Tailscale connection AWS RDS
 
 
+Current version of this project uses the subnet router for NAT resolution as well, making it a two-purpose single box.
+
+Alternatively, this is an example with separate boxes, which can be adapted with existing code.
+
 <img src=".assets/tailscale.png" />
 
 https://tailscale.com/kb/1141/aws-rds
@@ -23,23 +27,44 @@ cp config/template.tfvars .auto.tfvars
 ```
 
 ```sh
+terraform init
+terraform apply -auto-approve
+```
+
+Connect to the Tailscale box using SSM:
+
+```sh
 aws ssm start-session --target <instance>
 ```
 
+Check that everything was installed correctly:
+
+```sh
+cloud-init status
+```
+
+Advertise the subnet routes:
 
 ```sh
 tailscale up --advertise-routes=10.0.0.0/16 --accept-dns=false
 ```
 
+
+
 ```ps1
 nslookup <rds> 10.0.0.2
 ```
 
-Approve the subnet routes
+Add the VPC DNS to the Tailscale namespaces and approve the routes:
+
+> ⚠️ Make sure you approve the routes in the Admin panel
 
 | IP       | Namespace                   |
 |----------|-----------------------------|
 | 10.0.0.2 | us-east-2.rds.amazonaws.com |
+
+
+You can disable key expiry as well.
 
 
 ```

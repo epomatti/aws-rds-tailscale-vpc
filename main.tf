@@ -49,6 +49,10 @@ module "server" {
   ami           = var.nat_ami
 }
 
+module "ssm" {
+  source = "./modules/ssm"
+}
+
 module "tailscale" {
   count                    = var.create_ts_subnet_router ? 1 : 0
   source                   = "./modules/tailscale"
@@ -60,6 +64,8 @@ module "tailscale" {
   userdata                 = var.ts_userdata
   rds_security_group_id    = module.database.security_group_id
   appserver_route_table_id = module.vpc.appserver_route_table_id
+
+  depends_on = [module.ssm]
 }
 
 # module "nat_instance" {
