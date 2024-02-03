@@ -1,9 +1,3 @@
-resource "aws_route" "appserver_nat" {
-  route_table_id         = var.appserver_route_table_id
-  destination_cidr_block = "0.0.0.0/0"
-  network_interface_id   = aws_instance.default.primary_network_interface_id
-}
-
 resource "aws_iam_instance_profile" "default" {
   name = "${var.workload}-subnet-router"
   role = aws_iam_role.default.id

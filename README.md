@@ -41,6 +41,7 @@ Check that everything was installed correctly:
 
 ```sh
 cloud-init status
+cat /var/log/cloud-init-output.log
 ```
 
 Advertise the subnet routes:
@@ -67,6 +68,13 @@ Add the VPC DNS to the Tailscale namespaces and approve the routes:
 You can disable key expiry as well.
 
 
+Checking the status of the CloudWatch agent:
+
+```sh
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
+```
+
+
 ```
 tailscale ip -4
 ```
@@ -74,4 +82,12 @@ tailscale ip -4
 ```
 sudo apt install speedtest-cli
 speedtest-cli --secure
+```
+
+```sh
+aws ssm send-command \
+    --document-name 'AmazonInspector2-ConfigureInspectorSsmPluginLinux	' \
+    --targets Key=InstanceIds,Values='i-00000000000000000' \
+    --parameters 'Operation=Install,RebootOption=RebootIfNeeded' \
+    --timeout-seconds 600
 ```

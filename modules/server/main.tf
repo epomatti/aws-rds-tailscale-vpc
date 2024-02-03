@@ -41,7 +41,6 @@ resource "aws_instance" "nat_instance" {
 }
 
 ### IAM Role ###
-
 resource "aws_iam_role" "nat_instance" {
   name = "${var.workload}-${local.name}"
 
@@ -81,18 +80,18 @@ data "aws_vpc" "selected" {
 
 resource "aws_security_group_rule" "egress_http" {
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.nat_instance.id
 }
 
-# resource "aws_security_group_rule" "egress_https" {
-#   type              = "egress"
-#   from_port         = 0
-#   to_port           = 443
-#   protocol          = "TCP"
-#   cidr_blocks       = ["0.0.0.0/0"]
-#   security_group_id = aws_security_group.nat_instance.id
-# }
+resource "aws_security_group_rule" "egress_https" {
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "TCP"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.nat_instance.id
+}
