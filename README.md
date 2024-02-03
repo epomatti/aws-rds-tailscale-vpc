@@ -1,30 +1,22 @@
-# Tailscale connection AWS RDS
+# Tailscale AWS VPC
 
+Using Tailscale in subnet router mode to access RDS in a VPC.
 
-Current version of this project uses the subnet router for NAT resolution as well, making it a two-purpose single box.
+> 💡 This project depends on my repository [epomatti/aws-ec2-imagebuilder][1] to build an optimized image. Or, if you want to configure it manually, use the commands in [ubuntu-tailscale-full.sh](./modules/tailscale/userdata/ubuntu-tailscale-full.sh) to set Tailscale.
 
-Alternatively, this is an example with separate boxes, which can be adapted with existing code.
+Current version of this project uses the subnet router for NAT resolution as well, making it a two-purpose single box. Alternatively, this is an example with separate boxes, which can be adapted with existing code.
 
 <img src=".assets/tailscale.png" />
 
-https://tailscale.com/kb/1141/aws-rds
+## Setup
 
-https://tailscale.com/kb/1174/install-debian-bookworm
-https://tailscale.com/kb/1019/subnets?tab=linux
-
-https://tailscale.com/kb/1021/install-aws#step-8-close-off-your-firewall
-
-https://tailscale.com/kb/1235/resolv-conf?q=dns
-https://repost.aws/questions/QUlEvYKkbUSNmZCiNJFcMpCA/aws-ec2-ubuntu-22-04-dns-issues-with-tailscale
-
-https://tailscale.com/blog/how-tailscale-works
-
-
-https://www.devzero.io/docs/how-can-i-connect-to-an-aws-rds-database  
+Create the `.auto.tfvars` from the template and set your variables accordingly.:
 
 ```sh
 cp config/template.tfvars .auto.tfvars
 ```
+
+Create the infrastructure:
 
 ```sh
 terraform init
@@ -37,26 +29,29 @@ Connect to the Tailscale box using SSM:
 aws ssm start-session --target <instance>
 ```
 
-Check that everything was installed correctly:
+You can run some manual checks to verify if everything was installed correctly:
 
 ```sh
+# Verify the cloud-init start up
 cloud-init status
 cat /var/log/cloud-init-output.log
+
+# Check the state of the CloudWatch agent
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
+
+# Look if there are any Tailscale erros in crontab
+grep CRON /var/log/syslog
 ```
 
-Advertise the subnet routes:
+Start Tailscale and advertise the subnet routes:
 
 ```sh
 tailscale up --advertise-routes=10.0.0.0/16 --accept-dns=false
 ```
 
+Use the link to accept link to register the device to Tailscale. 
 
-
-```ps1
-nslookup <rds> 10.0.0.2
-```
-
-Add the VPC DNS to the Tailscale namespaces and approve the routes:
+Now, add the VPC DNS to the Tailscale namespaces and approve the routes. You can disable key expiry as well.
 
 > ⚠️ Make sure you approve the routes in the Admin panel
 
@@ -65,29 +60,32 @@ Add the VPC DNS to the Tailscale namespaces and approve the routes:
 | 10.0.0.2 | us-east-2.rds.amazonaws.com |
 
 
-You can disable key expiry as well.
-
-
-Checking the status of the CloudWatch agent:
+Check the results status of Tailscale:
 
 ```sh
-/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -m ec2 -a status
-```
-
-
-```
 tailscale ip -4
 ```
 
-```
+Change the `create_appserver` parameter to `true` and create the private server to test NAT functionality.
+
+You can install and run a speed test tool to also verify performance:
+
+```sh
 sudo apt install speedtest-cli
 speedtest-cli --secure
 ```
 
-```sh
-aws ssm send-command \
-    --document-name 'AmazonInspector2-ConfigureInspectorSsmPluginLinux	' \
-    --targets Key=InstanceIds,Values='i-00000000000000000' \
-    --parameters 'Operation=Install,RebootOption=RebootIfNeeded' \
-    --timeout-seconds 600
+## Sources
+
 ```
+https://tailscale.com/kb/1141/aws-rds
+https://tailscale.com/kb/1174/install-debian-bookworm
+https://tailscale.com/kb/1019/subnets?tab=linux
+https://tailscale.com/kb/1021/install-aws#step-8-close-off-your-firewall
+https://tailscale.com/kb/1235/resolv-conf?q=dns
+https://repost.aws/questions/QUlEvYKkbUSNmZCiNJFcMpCA/aws-ec2-ubuntu-22-04-dns-issues-with-tailscale
+https://tailscale.com/blog/how-tailscale-works
+https://www.devzero.io/docs/how-can-i-connect-to-an-aws-rds-database
+```
+
+[1]: https://github.com/epomatti/aws-ec2-imagebuilder
