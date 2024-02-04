@@ -75,6 +75,40 @@ sudo apt install speedtest-cli
 speedtest-cli --secure
 ```
 
+## ACLs
+
+Example of a policy to restrict access to personal devices, servers, and environments. More sample [here][2].
+
+```json
+{
+	"tagOwners": {
+		"tag:personal": ["some@user.com"],
+		"tag:server":   ["some@user.com"],
+		"tag:stage":    ["some@user.com"],
+		"tag:prod":     ["some@user.com"],
+	},
+
+	"acls": [
+		{
+			"action": "accept",
+			"src":    ["autogroup:member"],
+			"dst":    ["autogroup:self:*"],
+		},
+		{"action": "accept", "src": ["autogroup:member"], "dst": ["tag:server:*"]},
+		{"action": "accept", "src": ["tag:personal"], "dst": ["tag:server:*"]},
+		{"action": "accept", "src": ["tag:stage"], "dst": ["tag:stage:*"]},
+		{"action": "accept", "src": ["tag:prod"], "dst": ["tag:prod:*"]},
+		{"action": "accept", "src": ["tag:prod"], "dst": ["tag:prod:*"]},
+		{"action": "accept", "src": ["autogroup:owner"], "dst": ["*:*"]},
+		{
+			"action": "accept",
+			"src":    ["some@user.com"],
+			"dst":    ["tag:server:*"],
+		},
+	],
+}
+```
+
 ## Sources
 
 ```
@@ -89,3 +123,4 @@ https://www.devzero.io/docs/how-can-i-connect-to-an-aws-rds-database
 ```
 
 [1]: https://github.com/epomatti/aws-ec2-imagebuilder
+[2]: https://tailscale.com/kb/1192/acl-samples
