@@ -75,6 +75,12 @@ sudo apt install speedtest-cli
 speedtest-cli --secure
 ```
 
+## GitHub Action
+
+A workflow is available based on the [documentation][3].
+
+To use it, create an OAuth client in Tailscale and set the variables.
+
 ## ACLs
 
 Example of a policy to restrict access to personal devices, servers, and environments. More sample [here][2].
@@ -124,3 +130,4 @@ https://www.devzero.io/docs/how-can-i-connect-to-an-aws-rds-database
 
 [1]: https://github.com/epomatti/aws-ec2-imagebuilder
 [2]: https://tailscale.com/kb/1192/acl-samples
+[3]: https://tailscale.com/kb/1276/tailscale-github-action
