@@ -18,7 +18,7 @@ appserver_ami           = "ami-0748d13ffbc370c2b"
 appserver_instance_type = "t4g.nano"
 
 # NAT Instance
-create_nat_instance = false
-nat_ami             = "ami-0748d13ffbc370c2b"
-nat_instance_type   = "t4g.nano"
-nat_userdata        = "ubuntu-nat.sh"
+# create_nat_instance = false
+# nat_ami             = "ami-0748d13ffbc370c2b"
+# nat_instance_type   = "t4g.nano"
+# nat_userdata        = "ubuntu-nat.sh"

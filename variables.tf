@@ -2,23 +2,6 @@ variable "aws_region" {
   type = string
 }
 
-### NAT ###
-variable "create_nat_instance" {
-  type = bool
-}
-
-variable "nat_instance_type" {
-  type = string
-}
-
-variable "nat_userdata" {
-  type = string
-}
-
-variable "nat_ami" {
-  type = string
-}
-
 ### Tailgate ###
 variable "create_ts_subnet_router" {
   type = bool
@@ -62,3 +45,20 @@ variable "rds_password" {
   type      = string
   sensitive = true
 }
+
+### NAT ###
+# variable "create_nat_instance" {
+#   type = bool
+# }
+
+# variable "nat_instance_type" {
+#   type = string
+# }
+
+# variable "nat_userdata" {
+#   type = string
+# }
+
+# variable "nat_ami" {
+#   type = string
+# }

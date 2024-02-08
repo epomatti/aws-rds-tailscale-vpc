@@ -45,8 +45,8 @@ module "server" {
   workload      = local.workload
   vpc_id        = module.vpc.vpc_id
   subnet        = module.vpc.appserver_subnet_id
-  instance_type = var.nat_instance_type
-  ami           = var.nat_ami
+  instance_type = var.appserver_instance_type
+  ami           = var.appserver_ami
 }
 
 module "ssm" {
