@@ -87,31 +87,31 @@ Example of a policy to restrict access to personal devices, servers, and environ
 
 ```json
 {
-	"tagOwners": {
-		"tag:personal": ["some@user.com"],
-		"tag:server":   ["some@user.com"],
-		"tag:stage":    ["some@user.com"],
-		"tag:prod":     ["some@user.com"],
-	},
+  "tagOwners": {
+    "tag:personal": ["some@user.com"],
+    "tag:server":   ["some@user.com"],
+    "tag:stage":    ["some@user.com"],
+    "tag:prod":     ["some@user.com"],
+  },
 
-	"acls": [
-		{
-			"action": "accept",
-			"src":    ["autogroup:member"],
-			"dst":    ["autogroup:self:*"],
-		},
-		{"action": "accept", "src": ["autogroup:member"], "dst": ["tag:server:*"]},
-		{"action": "accept", "src": ["tag:personal"], "dst": ["tag:server:*"]},
-		{"action": "accept", "src": ["tag:stage"], "dst": ["tag:stage:*"]},
-		{"action": "accept", "src": ["tag:prod"], "dst": ["tag:prod:*"]},
-		{"action": "accept", "src": ["tag:prod"], "dst": ["tag:prod:*"]},
-		{"action": "accept", "src": ["autogroup:owner"], "dst": ["*:*"]},
-		{
-			"action": "accept",
-			"src":    ["some@user.com"],
-			"dst":    ["tag:server:*"],
-		},
-	],
+  "acls": [
+    {
+      "action": "accept",
+      "src":    ["autogroup:member"],
+      "dst":    ["autogroup:self:*"],
+    },
+    {"action": "accept", "src": ["autogroup:member"], "dst": ["tag:server:*"]},
+    {"action": "accept", "src": ["tag:personal"], "dst": ["tag:server:*"]},
+    {"action": "accept", "src": ["tag:stage"], "dst": ["tag:stage:*"]},
+    {"action": "accept", "src": ["tag:prod"], "dst": ["tag:prod:*"]},
+    {"action": "accept", "src": ["tag:prod"], "dst": ["tag:prod:*"]},
+    {"action": "accept", "src": ["autogroup:owner"], "dst": ["*:*"]},
+    {
+      "action": "accept",
+      "src":    ["some@user.com"],
+      "dst":    ["tag:server:*"],
+    },
+  ],
 }
 ```
 
