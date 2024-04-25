@@ -7,7 +7,7 @@ resource "aws_db_instance" "default" {
 
   db_name        = local.db_name
   engine         = "postgres"
-  engine_version = "16.1"
+  engine_version = "16.2"
 
   username   = var.username
   password   = var.password
