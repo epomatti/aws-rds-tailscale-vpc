@@ -2,7 +2,8 @@
 
 Using Tailscale in subnet router mode to access RDS in a VPC.
 
-> 💡 This project depends on my repository [epomatti/aws-ec2-imagebuilder][1] to build an optimized image. Or, if you want to configure it manually, use the commands in [ubuntu-tailscale-full.sh](./modules/tailscale/userdata/ubuntu-tailscale-full.sh) to set Tailscale.
+> [!TIP]
+> This project depends on my repository [epomatti/aws-ec2-imagebuilder][1] to build an optimized image. Or, if you want to configure it manually, use the commands in [ubuntu-tailscale-full.sh](./modules/tailscale/userdata/ubuntu-tailscale-full.sh) to set Tailscale.
 
 Current version of this project uses the subnet router for NAT resolution as well, making it a two-purpose single box. Alternatively, this is an example with separate boxes, which can be adapted with existing code.
 
@@ -53,7 +54,8 @@ Use the link to accept link to register the device to Tailscale.
 
 Now, add the VPC DNS to the Tailscale namespaces and approve the routes. You can disable key expiry as well.
 
-> ⚠️ Make sure you approve the routes in the Admin panel
+> [!IMPORTANT]
+> Make sure you approve the routes in the Admin panel.
 
 | IP       | Namespace                   |
 |----------|-----------------------------|
